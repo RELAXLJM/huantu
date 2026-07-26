@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huantu.mapper.PostMapper">
+
+    <resultMap id="postMap" type="com.huantu.entity.Post">
+        <id property="id" column="id"/>
+        <result property="authorId" column="author_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="images" column="images"/>
+        <result property="videoUrl" column="video_url"/>
+        <result property="city" column="city"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="locationTag" column="location_tag"/>
+        <result property="isLocalAuth" column="is_local_auth"/>
+        <result property="scenicId" column="scenic_id"/>
+        <result property="status" column="status"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="collectCount" column="collect_count"/>
+        <result property="usefulCount" column="useful_count"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `post` (author_id, title, content, images, city, city_code,
+                            location_tag, is_local_auth, scenic_id, status, created_at, updated_at)
+        VALUES (#{authorId}, #{title}, #{content}, #{images}, #{city}, #{cityCode},
+                #{locationTag}, #{isLocalAuth}, #{scenicId}, #{status}, NOW(), NOW())
+    </insert>
+
+    <select id="findById" resultMap="postMap">
+        SELECT * FROM `post` WHERE id = #{id}
+    </select>
+
+    <select id="findList" resultMap="postMap">
+        SELECT * FROM `post`
+        WHERE status = 0
+        <if test="cityCode != null and cityCode != ''">
+            AND city_code = #{cityCode}
+        </if>
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <update id="updateById">
+        UPDATE `post`
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateCount">
+        UPDATE `post`
+        SET `${field}` = `${field}` + #{delta}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM `post` WHERE id = #{id}
+    </delete>
+
+</mapper>

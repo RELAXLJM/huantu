@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huantu.mapper.RouteScenicMapper">
+
+    <resultMap id="routeScenicMap" type="com.huantu.entity.RouteScenic">
+        <id property="id" column="id"/>
+        <result property="routeId" column="route_id"/>
+        <result property="scenicId" column="scenic_id"/>
+        <result property="dayNumber" column="day_number"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="stayDuration" column="stay_duration"/>
+        <result property="transportTip" column="transport_tip"/>
+        <result property="memo" column="memo"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `route_scenic` (route_id, scenic_id, day_number, sort_order,
+                                    stay_duration, transport_tip, memo, created_at)
+        VALUES (#{routeId}, #{scenicId}, #{dayNumber}, #{sortOrder},
+                #{stayDuration}, #{transportTip}, #{memo}, NOW())
+    </insert>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `route_scenic` (route_id, scenic_id, day_number, sort_order,
+                                    stay_duration, transport_tip, memo, created_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.routeId}, #{item.scenicId}, #{item.dayNumber}, #{item.sortOrder},
+             #{item.stayDuration}, #{item.transportTip}, #{item.memo}, NOW())
+        </foreach>
+    </insert>
+
+    <select id="findByRouteId" resultMap="routeScenicMap">
+        SELECT * FROM `route_scenic`
+        WHERE route_id = #{routeId}
+        ORDER BY day_number ASC, sort_order ASC
+    </select>
+
+    <update id="updateById">
+        UPDATE `route_scenic`
+        <set>
+            <if test="dayNumber != null">day_number = #{dayNumber},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="stayDuration != null">stay_duration = #{stayDuration},</if>
+            <if test="transportTip != null">transport_tip = #{transportTip},</if>
+            <if test="memo != null">memo = #{memo},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByRouteId">
+        DELETE FROM `route_scenic` WHERE route_id = #{routeId}
+    </delete>
+
+</mapper>

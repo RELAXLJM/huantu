@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huantu.mapper.UserMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="userMap" type="com.huantu.entity.User">
+        <id property="id" column="id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="phone" column="phone"/>
+        <result property="passwordHash" column="password_hash"/>
+        <result property="wxOpenid" column="wx_openid"/>
+        <result property="city" column="city"/>
+        <result property="bio" column="bio"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- 根据手机号查询 -->
+    <select id="findByPhone" resultMap="userMap">
+        SELECT * FROM `user` WHERE phone = #{phone}
+    </select>
+
+    <!-- 根据ID查询 -->
+    <select id="findById" resultMap="userMap">
+        SELECT * FROM `user` WHERE id = #{id}
+    </select>
+
+    <!-- 插入用户 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `user` (nickname, phone, password_hash, city, created_at, updated_at)
+        VALUES (#{nickname}, #{phone}, #{passwordHash}, #{city}, NOW(), NOW())
+    </insert>
+
+    <!-- 更新用户信息 -->
+    <update id="updateById">
+        UPDATE `user`
+        <set>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="bio != null">bio = #{bio},</if>
+            <if test="passwordHash != null">password_hash = #{passwordHash},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 统计用户路线数 -->
+    <select id="countRoutes" resultType="int">
+        SELECT COUNT(*) FROM `route` WHERE user_id = #{userId} AND status != 0
+    </select>
+
+</mapper>

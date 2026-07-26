@@ -1,13 +1,12 @@
-package com.gdpt.backend;
+package com.huantu;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BackendApplicationTests {
+class HuantuApplicationTests {
 
     @Test
     void contextLoads() {
     }
-
 }

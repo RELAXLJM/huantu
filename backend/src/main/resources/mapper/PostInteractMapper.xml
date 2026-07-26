@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huantu.mapper.PostInteractMapper">
+
+    <resultMap id="interactMap" type="com.huantu.entity.PostInteract">
+        <id property="id" column="id"/>
+        <result property="postId" column="post_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="type" column="type"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `post_interact` (post_id, user_id, type, created_at)
+        VALUES (#{postId}, #{userId}, #{type}, NOW())
+    </insert>
+
+    <select id="findByUserAndPost" resultMap="interactMap">
+        SELECT * FROM `post_interact`
+        WHERE user_id = #{userId} AND post_id = #{postId} AND type = #{type}
+    </select>
+
+    <select id="findByUserAndPosts" resultMap="interactMap">
+        SELECT * FROM `post_interact`
+        WHERE user_id = #{userId}
+        AND post_id IN
+        <foreach collection="postIds" item="pid" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+        AND type = #{type}
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM `post_interact` WHERE id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huantu.mapper.ScenicMapper">
+
+    <resultMap id="scenicMap" type="com.huantu.entity.Scenic">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="poiType" column="poi_type"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="address" column="address"/>
+        <result property="city" column="city"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="rating" column="rating"/>
+        <result property="images" column="images"/>
+        <result property="openTime" column="open_time"/>
+        <result property="priceInfo" column="price_info"/>
+        <result property="tag" column="tag"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findById" resultMap="scenicMap">
+        SELECT * FROM `scenic` WHERE id = #{id}
+    </select>
+
+    <select id="search" resultMap="scenicMap">
+        SELECT * FROM `scenic`
+        WHERE 1 = 1
+        <if test="cityCode != null and cityCode != ''">
+            AND city_code = #{cityCode}
+        </if>
+        <if test="poiType != null and poiType != ''">
+            AND poi_type = #{poiType}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (name LIKE CONCAT('%', #{keyword}, '%') OR city LIKE CONCAT('%', #{keyword}, '%') OR tag LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY rating DESC
+        LIMIT 20
+    </select>
+
+    <select id="findByIds" resultMap="scenicMap">
+        SELECT * FROM `scenic`
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `scenic` (name, poi_type, longitude, latitude, address, city,
+                              city_code, rating, images, open_time, price_info, tag, created_at)
+        VALUES (#{name}, #{poiType}, #{longitude}, #{latitude}, #{address}, #{city},
+                #{cityCode}, #{rating}, #{images}, #{openTime}, #{priceInfo}, #{tag}, NOW())
+    </insert>
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `scenic` (name, poi_type, longitude, latitude, address, city,
+                              city_code, rating, images, open_time, price_info, tag, created_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name}, #{item.poiType}, #{item.longitude}, #{item.latitude},
+             #{item.address}, #{item.city}, #{item.cityCode}, #{item.rating},
+             #{item.images}, #{item.openTime}, #{item.priceInfo}, #{item.tag}, NOW())
+        </foreach>
+    </insert>
+
+</mapper>

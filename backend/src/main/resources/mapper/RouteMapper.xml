@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huantu.mapper.RouteMapper">
+
+    <resultMap id="routeMap" type="com.huantu.entity.Route">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <result property="coverUrl" column="cover_url"/>
+        <result property="destination" column="destination"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="days" column="days"/>
+        <result property="totalDuration" column="total_duration"/>
+        <result property="companionType" column="companion_type"/>
+        <result property="budgetMin" column="budget_min"/>
+        <result property="budgetMax" column="budget_max"/>
+        <result property="preference" column="preference"/>
+        <result property="status" column="status"/>
+        <result property="aiPrompt" column="ai_prompt"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `route` (user_id, title, cover_url, destination, city_code, days,
+                             total_duration, companion_type, budget_min, budget_max,
+                             preference, status, ai_prompt, created_at, updated_at)
+        VALUES (#{userId}, #{title}, #{coverUrl}, #{destination}, #{cityCode}, #{days},
+                #{totalDuration}, #{companionType}, #{budgetMin}, #{budgetMax},
+                #{preference}, #{status}, #{aiPrompt}, NOW(), NOW())
+    </insert>
+
+    <select id="findById" resultMap="routeMap">
+        SELECT * FROM `route` WHERE id = #{id}
+    </select>
+
+    <select id="findByUserId" resultMap="routeMap">
+        SELECT * FROM `route`
+        WHERE user_id = #{userId}
+        <if test="status != null">AND status = #{status}</if>
+        ORDER BY created_at DESC
+    </select>
+
+    <update id="updateById">
+        UPDATE `route`
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="coverUrl != null">cover_url = #{coverUrl},</if>
+            <if test="totalDuration != null">total_duration = #{totalDuration},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM `route` WHERE id = #{id}
+    </delete>
+
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*) FROM `route` WHERE user_id = #{userId} AND status != 0
+    </select>
+
+</mapper>

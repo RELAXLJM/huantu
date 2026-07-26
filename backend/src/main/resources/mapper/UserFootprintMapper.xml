@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huantu.mapper.UserFootprintMapper">
+
+    <resultMap id="footprintMap" type="com.huantu.entity.UserFootprint">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="scenicId" column="scenic_id"/>
+        <result property="city" column="city"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO `user_footprint` (user_id, scenic_id, city, city_code, longitude, latitude, created_at)
+        VALUES (#{userId}, #{scenicId}, #{city}, #{cityCode}, #{longitude}, #{latitude}, NOW())
+    </insert>
+
+    <select id="findByUserId" resultMap="footprintMap">
+        SELECT * FROM `user_footprint`
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="countCities" resultType="int">
+        SELECT COUNT(DISTINCT city_code) FROM `user_footprint` WHERE user_id = #{userId}
+    </select>
+
+    <select id="getFootprintCities" resultType="java.util.HashMap">
+        SELECT city, city_code AS cityCode, COUNT(*) AS count,
+               MAX(created_at) AS lastVisit
+        FROM `user_footprint`
+        WHERE user_id = #{userId}
+        GROUP BY city, city_code
+        ORDER BY lastVisit DESC
+    </select>
+
+</mapper>
