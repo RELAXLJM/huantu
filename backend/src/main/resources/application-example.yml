@@ -1,0 +1,97 @@
+# ============================================================
+# 寰途旅游 - 配置文件模板
+# 使用方法：复制本文件为 application.yml，填入你的配置后启动
+# cp application-example.yml application.yml
+# ============================================================
+
+# ==================== 应用配置 ====================
+spring:
+  application:
+    name: huantu-backend
+
+  # ==================== 数据源配置（HikariCP连接池） ====================
+  datasource:
+    url: jdbc:mysql://localhost:3306/huantu?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: YOUR_DB_PASSWORD          # ← 改成你的MySQL密码
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # ==================== Redis配置 ====================
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:                         # Redis密码，没有就留空
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+  # ==================== 文件上传限制 ====================
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  # ==================== Session配置 ====================
+  session:
+    timeout: 604800  # 7天，单位秒
+    store-type: redis
+
+# ==================== 服务器配置 ====================
+server:
+  port: 8080
+
+# ==================== MyBatis配置 ====================
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.huantu.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# ==================== 日志配置 ====================
+logging:
+  level:
+    com.huantu: debug
+    org.springframework: warn
+  file:
+    path: ./logs
+    name: ${logging.file.path}/huantu.log
+
+# ==================== 阿里云OSS配置（可选） ====================
+aliyun:
+  oss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    access-key-id:
+    access-key-secret:
+    bucket-name: huantu
+
+# ==================== 腾讯地图配置（必填） ====================
+# 申请地址：https://lbs.qq.com → 创建应用 → WebService → 获取Key
+tencent:
+  map:
+    api-key: YOUR_TENCENT_MAP_KEY       # ← 必填！改成你的腾讯地图Key
+
+# ==================== AI大模型配置（可选） ====================
+ai:
+  provider: tongyi                      # tongyi 或 wenxin
+  api-key:                              # 大模型API Key
+  model: qwen-turbo
+
+# ==================== 短信配置（可选） ====================
+sms:
+  provider: aliyun
+  access-key-id:
+  access-key-secret:
+  sign-name: 寰途
+  template-code:
