@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/background">
+
+            <!-- ==================== 顶部渐变 Header ==================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_home_header"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="24dp">
+
+                <!-- 城市定位行 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <!-- 城市名 + 定位图标 -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="📍"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tv_city_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="定位中..."
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"
+                                android:layout_marginStart="4dp" />
+                        </LinearLayout>
+
+                        <!-- 天气摘要小字 -->
+                        <TextView
+                            android:id="@+id/tv_weather_brief"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="12sp"
+                            android:textColor="#CCFFFFFF"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+
+                    <!-- AI 魔法棒 -->
+                    <LinearLayout
+                        android:id="@+id/btn_ai_wand"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:gravity="center"
+                        android:background="@drawable/bg_skeleton_shimmer"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:alpha="0.25"
+                        android:backgroundTint="#FFFFFF">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="✨"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 搜索框 -->
+                <LinearLayout
+                    android:id="@+id/layout_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="@drawable/bg_search_bar"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔍"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="想去哪儿？搜景点或美食"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_hint"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ==================== 快捷分类入口 ==================== -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_scenic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏞️  景点"
+                        android:textSize="13sp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginEnd="10dp"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:checkable="false"
+                        app:chipBackgroundColor="@color/surface"
+                        app:chipStrokeColor="@color/divider"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="20dp"
+                        android:elevation="2dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_food"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🍜  美食"
+                        android:textSize="13sp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginEnd="10dp"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:checkable="false"
+                        app:chipBackgroundColor="@color/surface"
+                        app:chipStrokeColor="@color/divider"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="20dp"
+                        android:elevation="2dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_hotel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🏨  住宿"
+                        android:textSize="13sp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginEnd="10dp"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:checkable="false"
+                        app:chipBackgroundColor="@color/surface"
+                        app:chipStrokeColor="@color/divider"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="20dp"
+                        android:elevation="2dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_travel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🚗  周边游"
+                        android:textSize="13sp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginEnd="10dp"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:checkable="false"
+                        app:chipBackgroundColor="@color/surface"
+                        app:chipStrokeColor="@color/divider"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="20dp"
+                        android:elevation="2dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📸  拍照"
+                        android:textSize="13sp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginEnd="10dp"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:checkable="false"
+                        app:chipBackgroundColor="@color/surface"
+                        app:chipStrokeColor="@color/divider"
+                        app:chipStrokeWidth="1dp"
+                        app:chipCornerRadius="20dp"
+                        android:elevation="2dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- ==================== 天气卡片 ==================== -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/layout_weather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/surface">
+
+                <!-- 骨架屏状态 -->
+                <LinearLayout
+                    android:id="@+id/layout_weather_skeleton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_skeleton_shimmer" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <View
+                            android:layout_width="100dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/bg_skeleton_shimmer"
+                            android:layout_marginBottom="8dp" />
+
+                        <View
+                            android:layout_width="160dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/bg_skeleton_shimmer" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 真实天气内容 -->
+                <LinearLayout
+                    android:id="@+id/layout_weather_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:visibility="visible">
+
+                    <View
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_weather_icon" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="14dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_temp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="--°"
+                                android:textSize="32sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/primary" />
+
+                            <TextView
+                                android:id="@+id/tv_weather_detail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="加载天气中..."
+                                android:textSize="14sp"
+                                android:textColor="@color/text_secondary"
+                                android:layout_marginStart="10dp" />
+                        </LinearLayout>
+
+                        <!-- AI 出行建议 -->
+                        <TextView
+                            android:id="@+id/tv_trip_advice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="12sp"
+                            android:textColor="@color/text_hint"
+                            android:layout_marginTop="6dp"
+                            android:maxLines="2"
+                            android:ellipsize="end" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ==================== 附近正在热玩 - 区块标题 ==================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="24dp"
+                android:paddingBottom="10dp">
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_section_indicator" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="附近正在热玩"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="发现城市隐藏的精彩"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_hint" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 附近瀑布流骨架屏 -->
+            <LinearLayout
+                android:id="@+id/layout_nearby_skeleton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="6dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:background="@drawable/bg_skeleton_shimmer"
+                        android:layout_marginBottom="6dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:background="@drawable/bg_skeleton_shimmer" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="6dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:background="@drawable/bg_skeleton_shimmer"
+                        android:layout_marginBottom="6dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:background="@drawable/bg_skeleton_shimmer" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_nearby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- 附近空状态 -->
+            <LinearLayout
+                android:id="@+id/layout_nearby_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🗺️"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="附近暂无推荐景点"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="试试切换城市查看更多内容"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- ==================== 城市必玩榜单 - 区块标题 ==================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="24dp"
+                android:paddingBottom="10dp">
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_section_indicator" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="城市必玩榜单"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="本地人都在去的热门去处"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_hint" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 榜单骨架屏 -->
+            <LinearLayout
+                android:id="@+id/layout_ranking_skeleton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="200dp"
+                    android:background="@drawable/bg_skeleton_shimmer"
+                    android:layout_marginEnd="12dp" />
+
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="200dp"
+                    android:background="@drawable/bg_skeleton_shimmer"
+                    android:layout_marginEnd="12dp" />
+
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="200dp"
+                    android:background="@drawable/bg_skeleton_shimmer" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_rankings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="24dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- 榜单空状态 -->
+            <LinearLayout
+                android:id="@+id/layout_ranking_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏆"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="暂无榜单数据"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+
+            <!-- 底部安全间距（避免被导航栏遮挡） -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="80dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

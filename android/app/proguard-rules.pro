@@ -1,21 +1,41 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ==================== Retrofit & OkHttp ====================
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class retrofit2.** { *; }
+-keepclasseswithmembers class * { @retrofit2.http.* <methods>; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# ==================== Gson ====================
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.google.gson.** { *; }
+-keep class com.gdpt.huantu.core.model.** { *; }
+-keep class com.gdpt.huantu.core.model.request.** { *; }
+-keep class com.gdpt.huantu.core.network.ApiResponse { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ==================== Room ====================
+-keep class * extends androidx.room.RoomDatabase
+-keep @androidx.room.Entity class *
+-dontwarn androidx.room.paging.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ==================== Hilt ====================
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class * extends dagger.hilt.android.internal.managers.ViewComponentManager$FragmentContextWrapper { *; }
+
+# ==================== Glide ====================
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep class * extends com.bumptech.glide.module.AppGlideModule
+-keep class com.bumptech.glide.GeneratedAppGlideModuleImpl
+
+# ==================== ViewBinding ====================
+-keep class * implements androidx.viewbinding.ViewBinding { *; }
+
+# ==================== Tencent Map ====================
+-keep class com.tencent.** { *; }
+-dontwarn com.tencent.**
+
+# ==================== General ====================
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile

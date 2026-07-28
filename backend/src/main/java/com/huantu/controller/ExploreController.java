@@ -53,13 +53,24 @@ public class ExploreController {
     }
 
     /**
-     * 搜索景点
+     * 搜索景点（本地DB + 腾讯地图全国回退）
      */
     @GetMapping("/search")
     public Result<List<ScenicVO>> search(@RequestParam(required = false) String cityCode,
                                           @RequestParam String keyword,
                                           @RequestParam(required = false) String poiType) {
         List<ScenicVO> list = exploreService.search(cityCode, keyword, poiType);
+        return Result.success(list);
+    }
+
+    /**
+     * 基于GPS周边搜索
+     */
+    @GetMapping("/nearby-gps")
+    public Result<List<ScenicVO>> nearbyGps(@RequestParam double lng,
+                                             @RequestParam double lat,
+                                             @RequestParam(defaultValue = "10") Integer limit) {
+        List<ScenicVO> list = exploreService.getNearbyByGps(lng, lat, limit);
         return Result.success(list);
     }
 }

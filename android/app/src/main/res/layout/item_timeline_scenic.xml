@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="4dp"
+    android:layout_marginStart="20dp"
+    android:elevation="1dp">
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:background="#1A73E8"
+        android:layout_marginEnd="12dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_scenic_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="景点名称"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/tv_stay_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="建议游玩 2小时"
+            android:textSize="12sp"
+            android:textColor="#FF6B35"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tv_transport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+</LinearLayout>

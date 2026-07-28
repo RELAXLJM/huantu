@@ -1,22 +1,112 @@
 [versions]
 agp = "8.13.1"
-junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
+
+# AndroidX
 appcompat = "1.6.1"
 material = "1.10.0"
 activity = "1.8.0"
+fragment = "1.6.1"
 constraintlayout = "2.1.4"
+swiperefreshlayout = "1.1.0"
+viewpager2 = "1.0.0"
+recyclerview = "1.3.2"
+cardview = "1.0.0"
 
-[libraries]
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+# Jetpack
+lifecycle = "2.7.0"
+navigation = "2.7.5"
+room = "2.6.1"
+datastore = "1.1.1"
+
+# DI
+hilt = "2.51.1"
+
+# Network
+retrofit = "2.11.0"
+okhttp = "4.12.0"
+gson = "2.10.1"
+
+# Image
+glide = "4.16.0"
+
+# Tencent Map
+tencent-map = "5.5.0"
+tencent-location = "7.5.2"
+
+# Google Location
+play-services-location = "21.0.1"
+
+# UI Libs
+lottie = "6.5.2"
+circleimageview = "3.1.0"
+
+# Alibaba
+oss = "2.9.13"
+
+# Testing
+junit = "4.13.2"
+ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+
+# Annotation Processing
+hilt-compiler = "2.51.1"
+room-compiler = "2.6.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
+[libraries]
+# AndroidX Core
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
+
+# Jetpack
+lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
+lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
+lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "lifecycle" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation" }
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+
+# DI
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt-compiler" }
+
+# Network
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+# Image
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+
+# UI Libs
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleimageview" }
+
+# Alibaba OSS
+oss = { group = "com.aliyun.dpa", name = "oss-android-sdk", version.ref = "oss" }
+
+# Google Location
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+
+# Room Compiler
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-compiler" }

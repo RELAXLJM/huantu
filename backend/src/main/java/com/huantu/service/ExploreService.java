@@ -73,13 +73,41 @@ public class ExploreService {
     }
 
     /**
-     * 搜索景点
+     * 搜索景点（本地DB → 腾讯地图API全国搜索回退）
      */
     public List<ScenicVO> search(String cityCode, String keyword, String poiType) {
         List<Scenic> scenics = scenicMapper.search(cityCode, poiType, keyword);
-        return scenics.stream()
-                .map(this::toVO)
+        if (!scenics.isEmpty()) {
+            return scenics.stream().map(this::toVO).collect(Collectors.toList());
+        }
+        // 本地无结果 → 调用腾讯地图全国搜索
+        List<AmapService.PoiInfo> pois = amapService.searchNationwide(keyword);
+        return pois.stream().map(this::poiToVO).collect(Collectors.toList());
+    }
+
+    /**
+     * 基于GPS的周边热门景点
+     */
+    public List<ScenicVO> getNearbyByGps(double lng, double lat, Integer limit) {
+        if (limit == null || limit <= 0) limit = 10;
+        List<AmapService.PoiInfo> pois = amapService.searchAround(lng, lat, "旅游景点");
+        return pois.stream()
+                .limit(limit)
+                .map(this::poiToVO)
                 .collect(Collectors.toList());
+    }
+
+    private ScenicVO poiToVO(AmapService.PoiInfo poi) {
+        ScenicVO vo = new ScenicVO();
+        vo.setName(poi.getName());
+        vo.setPoiType(poi.getPoiType());
+        vo.setLongitude(poi.getLongitude());
+        vo.setLatitude(poi.getLatitude());
+        vo.setAddress(poi.getAddress());
+        vo.setCity(poi.getCityName());
+        vo.setRating(poi.getRating() != null ? poi.getRating() : 0.0);
+        vo.setImages(poi.getImages());
+        return vo;
     }
 
     private ScenicVO toVO(Scenic s) {

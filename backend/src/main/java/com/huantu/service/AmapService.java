@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 高德地图 Web API 封装
+ * 腾讯地图 WebService API 封装
  */
 @Service
 public class AmapService {
 
     private static final Logger log = LoggerFactory.getLogger(AmapService.class);
 
-    @Value("${amap.api-key}")
+    @Value("${tencent.map.api-key}")
     private String apiKey;
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -27,114 +27,87 @@ public class AmapService {
 
     // ==================== POI搜索 ====================
 
-    /**
-     * 根据城市和关键词搜索POI
-     */
-    public List<PoiInfo> searchPoi(String city, String keywords, String poiType) {
-        String url = String.format(
-                "https://restapi.amap.com/v3/place/text?key=%s&city=%s&keywords=%s&types=%s&offset=20&page=1&extensions=all",
-                apiKey, city, keywords, poiType != null ? poiType : "");
-
+    private List<PoiInfo> parsePoiResponse(String url) {
         try {
             String resp = restTemplate.getForObject(url, String.class);
             JsonNode root = objectMapper.readTree(resp);
 
-            if (root.get("status").asInt() != 1) {
-                log.warn("高德POI搜索失败: {}", resp);
+            if (root.get("status").asInt() != 0) {
+                log.warn("腾讯POI搜索失败: {}", resp);
                 return List.of();
             }
 
             List<PoiInfo> pois = new ArrayList<>();
-            JsonNode poisNode = root.path("pois");
-            for (JsonNode poi : poisNode) {
+            JsonNode dataArray = root.path("data");
+            for (JsonNode poi : dataArray) {
                 PoiInfo info = new PoiInfo();
-                info.setName(poi.path("name").asText());
+                info.setName(poi.path("title").asText());
                 info.setAddress(poi.path("address").asText());
-                info.setPoiType(poi.path("type").asText());
-                String[] location = poi.path("location").asText().split(",");
-                if (location.length == 2) {
-                    info.setLongitude(Double.parseDouble(location[0]));
-                    info.setLatitude(Double.parseDouble(location[1]));
-                }
-                info.setCityName(poi.path("cityname").asText());
-                info.setCityCode(poi.path("citycode").asText());
-                // 评分
-                JsonNode ratingNode = poi.path("biz_ext").path("rating");
-                if (!ratingNode.isMissingNode()) {
-                    info.setRating(Double.parseDouble(ratingNode.asText()));
-                }
-                // 图片
-                JsonNode photos = poi.path("photos");
-                if (photos.isArray() && photos.size() > 0) {
-                    List<String> imgList = new ArrayList<>();
-                    for (JsonNode photo : photos) {
-                        imgList.add(photo.path("url").asText());
-                    }
-                    info.setImages(String.join(",", imgList));
-                }
+                info.setPoiType(poi.path("category").asText());
+                info.setLongitude(poi.path("location").path("lng").asDouble());
+                info.setLatitude(poi.path("location").path("lat").asDouble());
+
+                JsonNode adInfo = poi.path("ad_info");
+                info.setCityName(adInfo.path("city").asText());
+                info.setCityCode(String.valueOf(adInfo.path("adcode").asInt()));
+
                 pois.add(info);
             }
             return pois;
         } catch (Exception e) {
-            log.error("高德POI搜索异常: ", e);
+            log.error("腾讯POI搜索异常: ", e);
             return List.of();
         }
+    }
+
+    /**
+     * 全国范围搜索POI（不限城市）
+     */
+    public List<PoiInfo> searchNationwide(String keyword) {
+        String url = String.format(
+                "https://apis.map.qq.com/ws/place/v1/search?key=%s&keyword=%s&page_size=20&page_index=1",
+                apiKey, keyword);
+        return parsePoiResponse(url);
+    }
+
+    /**
+     * 根据城市和关键词搜索POI
+     */
+    public List<PoiInfo> searchPoi(String city, String keywords, String poiType) {
+        String keyword = keywords != null ? keywords : "景点";
+        String url = String.format(
+                "https://apis.map.qq.com/ws/place/v1/search?key=%s&keyword=%s&boundary=region(%s,0)&page_size=20&page_index=1",
+                apiKey, keyword, city);
+        return parsePoiResponse(url);
     }
 
     /**
      * 周边搜索（基于经纬度）
      */
     public List<PoiInfo> searchAround(double longitude, double latitude, String poiType) {
+        String types = poiType != null ? poiType : "景点";
         String url = String.format(
-                "https://restapi.amap.com/v3/place/around?key=%s&location=%f,%f&radius=5000&types=%s&offset=20&page=1&extensions=all",
-                apiKey, longitude, latitude, poiType != null ? poiType : "景点");
-
-        try {
-            String resp = restTemplate.getForObject(url, String.class);
-            JsonNode root = objectMapper.readTree(resp);
-
-            if (root.get("status").asInt() != 1) {
-                log.warn("高德周边搜索失败: {}", resp);
-                return List.of();
-            }
-
-            List<PoiInfo> pois = new ArrayList<>();
-            JsonNode poisNode = root.path("pois");
-            for (JsonNode poi : poisNode) {
-                PoiInfo info = new PoiInfo();
-                info.setName(poi.path("name").asText());
-                info.setAddress(poi.path("address").asText());
-                info.setPoiType(poi.path("type").asText());
-                String[] location = poi.path("location").asText().split(",");
-                if (location.length == 2) {
-                    info.setLongitude(Double.parseDouble(location[0]));
-                    info.setLatitude(Double.parseDouble(location[1]));
-                }
-                info.setCityName(poi.path("cityname").asText());
-                info.setCityCode(poi.path("citycode").asText());
-
-                JsonNode ratingNode = poi.path("biz_ext").path("rating");
-                if (!ratingNode.isMissingNode()) {
-                    info.setRating(Double.parseDouble(ratingNode.asText()));
-                }
-                // 距离
-                info.setDistance(poi.path("distance").asInt());
-
-                JsonNode photos = poi.path("photos");
-                if (photos.isArray() && photos.size() > 0) {
-                    List<String> imgList = new ArrayList<>();
-                    for (JsonNode photo : photos) {
-                        imgList.add(photo.path("url").asText());
-                    }
-                    info.setImages(String.join(",", imgList));
-                }
-                pois.add(info);
-            }
-            return pois;
-        } catch (Exception e) {
-            log.error("高德周边搜索异常: ", e);
-            return List.of();
+                "https://apis.map.qq.com/ws/place/v1/search?key=%s&boundary=nearby(%f,%f,5000)&keyword=%s&page_size=20&page_index=1",
+                apiKey, latitude, longitude, types);
+        List<PoiInfo> pois = parsePoiResponse(url);
+        // 填充距离信息
+        for (PoiInfo info : pois) {
+            info.setDistance(calculateDistance(longitude, latitude, info.getLongitude(), info.getLatitude()));
         }
+        return pois;
+    }
+
+    /**
+     * 简易距离计算（单位：米）
+     */
+    private int calculateDistance(double lng1, double lat1, double lng2, double lat2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return (int) (6371000 * c);
     }
 
     // ==================== 天气查询 ====================
@@ -144,30 +117,26 @@ public class AmapService {
      */
     public WeatherInfo getWeather(String cityCode) {
         String url = String.format(
-                "https://restapi.amap.com/v3/weather/weatherInfo?key=%s&city=%s&extensions=all",
+                "https://apis.map.qq.com/ws/weather/v1/?key=%s&adcode=%s",
                 apiKey, cityCode);
 
         try {
             String resp = restTemplate.getForObject(url, String.class);
             JsonNode root = objectMapper.readTree(resp);
 
-            if (root.get("status").asInt() != 1) {
+            if (root.get("status").asInt() != 0) {
                 log.warn("天气查询失败: {}", resp);
                 return null;
             }
 
-            JsonNode forecast = root.path("forecasts").get(0);
-            JsonNode today = forecast.path("casts").get(0);
-
+            JsonNode realtime = root.path("result").path("realtime").get(0);
             WeatherInfo info = new WeatherInfo();
-            info.setCity(forecast.path("city").asText());
-            info.setDate(today.path("date").asText());
-            info.setDayWeather(today.path("dayweather").asText());
-            info.setNightWeather(today.path("nightweather").asText());
-            info.setDayTemp(Integer.parseInt(today.path("daytemp").asText()));
-            info.setNightTemp(Integer.parseInt(today.path("nighttemp").asText()));
-            info.setDayWind(today.path("daywind").asText());
-            info.setDayPower(today.path("daypower").asText());
+            info.setCity(realtime.path("province").asText() + realtime.path("city").asText());
+            info.setDate(realtime.path("update_time").asText().substring(0, 10));
+            info.setDayWeather(realtime.path("infos").path("weather").asText());
+            info.setDayTemp(Integer.parseInt(realtime.path("infos").path("temperature").asText()));
+            info.setDayWind(realtime.path("infos").path("wind_direction").asText());
+            info.setDayPower(realtime.path("infos").path("wind_power").asText());
             return info;
         } catch (Exception e) {
             log.error("天气查询异常: ", e);
@@ -178,18 +147,18 @@ public class AmapService {
     // ==================== 逆地理编码 ====================
 
     /**
-     * 经纬度 → 城市信息
+     * 经纬度 → 城市名
      */
     public String reverseGeocode(double longitude, double latitude) {
         String url = String.format(
-                "https://restapi.amap.com/v3/geocode/regeo?key=%s&location=%f,%f",
-                apiKey, longitude, latitude);
+                "https://apis.map.qq.com/ws/geocoder/v1/?key=%s&location=%f,%f",
+                apiKey, latitude, longitude);
 
         try {
             String resp = restTemplate.getForObject(url, String.class);
             JsonNode root = objectMapper.readTree(resp);
-            if (root.get("status").asInt() == 1) {
-                return root.path("regeocode").path("addressComponent").path("city").asText();
+            if (root.get("status").asInt() == 0) {
+                return root.path("result").path("address_component").path("city").asText();
             }
         } catch (Exception e) {
             log.error("逆地理编码异常: ", e);
@@ -209,7 +178,7 @@ public class AmapService {
         private String cityCode;
         private Double rating;
         private String images;
-        private Integer distance;  // 距离（米）
+        private Integer distance;
 
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }

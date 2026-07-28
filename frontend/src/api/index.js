@@ -39,7 +39,7 @@ export default {
     return api.delete(`/admin/scenic/${id}`)
   },
 
-  // 同步高德数据
+  // 同步腾讯地图数据
   syncScenic(city) {
     return api.get('/common/sync-scenic', { params: { city } })
   },
