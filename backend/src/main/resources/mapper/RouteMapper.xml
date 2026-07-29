@@ -61,4 +61,8 @@
         SELECT COUNT(*) FROM `route` WHERE user_id = #{userId} AND status != 0
     </select>
 
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM `route`
+    </select>
+
 </mapper>

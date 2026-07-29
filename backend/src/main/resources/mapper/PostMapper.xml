@@ -64,4 +64,8 @@
         DELETE FROM `post` WHERE id = #{id}
     </delete>
 
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM `post`
+    </select>
+
 </mapper>

@@ -22,4 +22,7 @@ public interface UserMapper {
 
     /** 统计用户的路线数 */
     int countRoutes(@Param("userId") Long userId);
+
+    /** 统计总用户数 */
+    int countAll();
 }

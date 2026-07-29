@@ -52,4 +52,9 @@
         SELECT COUNT(*) FROM `route` WHERE user_id = #{userId} AND status != 0
     </select>
 
+    <!-- 统计总用户数 -->
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM `user`
+    </select>
+
 </mapper>

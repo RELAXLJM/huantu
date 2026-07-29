@@ -26,4 +26,6 @@ public interface PostMapper {
                     @Param("delta") int delta);
 
     int deleteById(@Param("id") Long id);
+
+    int countAll();
 }

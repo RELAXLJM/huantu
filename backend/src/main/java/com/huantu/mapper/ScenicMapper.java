@@ -23,4 +23,8 @@ public interface ScenicMapper {
     int insert(Scenic scenic);
 
     int insertBatch(@Param("list") List<Scenic> list);
+
+    int deleteById(@Param("id") Long id);
+
+    int countAll();
 }

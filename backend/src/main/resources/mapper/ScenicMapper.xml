@@ -66,4 +66,12 @@
         </foreach>
     </insert>
 
+    <delete id="deleteById">
+        DELETE FROM `scenic` WHERE id = #{id}
+    </delete>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM `scenic`
+    </select>
+
 </mapper>
