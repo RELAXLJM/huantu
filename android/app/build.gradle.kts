@@ -19,7 +19,8 @@ android {
         // API 基础地址（配合 adb reverse 使用 localhost）
         buildConfigField("String", "API_BASE_URL", "\"http://localhost:8080/\"")
         // 腾讯地图 Key
-        buildConfigField("String", "TENCENT_MAP_KEY", "\"OOUBZ-BY4LT-GX3XE-VVCZI-CCUJF-7VFL3\"")
+        buildConfigField("String", "TENCENT_MAP_KEY", "\"JZBBZ-V42LB-CEGUY-JSOBW-KJJO5-KGFN4\"")
+
     }
 
     buildTypes {
