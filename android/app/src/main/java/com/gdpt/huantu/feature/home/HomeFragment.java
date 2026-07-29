@@ -257,18 +257,24 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 回退：基于缓存城市加载
+     * 回退：基于缓存城市加载（无GPS时使用默认城市广州）
      */
     private void loadCityBasedData() {
         String city = tokenManager.getCurrentCity();
         String cityCode = tokenManager.getCurrentCityCode();
 
-        if (!"定位中...".equals(city)) {
-            showSkeletons();
-            viewModel.loadWeather(cityCode.isEmpty() ? "440100" : cityCode);
-            viewModel.loadNearby(city, 20);
-            viewModel.loadRankings(city, null, 10);
+        // 如果没有定位信息，使用默认城市广州（开发/模拟器回退）
+        if ("定位中...".equals(city) || city == null || city.isEmpty()) {
+            city = "广州";
+            cityCode = "440100";
+            tokenManager.saveCityInfo(city, cityCode);
+            binding.tvCityName.setText(city);
         }
+
+        showSkeletons();
+        viewModel.loadWeather(cityCode.isEmpty() ? "440100" : cityCode);
+        viewModel.loadNearby(city, 20);
+        viewModel.loadRankings(city, null, 10);
     }
 
     private void showSkeletons() {

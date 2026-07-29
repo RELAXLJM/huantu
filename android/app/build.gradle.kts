@@ -16,8 +16,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // API 基础地址（配合 adb reverse 使用 localhost）
-        buildConfigField("String", "API_BASE_URL", "\"http://localhost:8080/\"")
+        // API 基础地址（电脑局域网IP，真机/模拟器通用）
+        buildConfigField("String", "API_BASE_URL", "\"http://192.168.2.106:8080/\"")
         // 腾讯地图 Key
         buildConfigField("String", "TENCENT_MAP_KEY", "\"JZBBZ-V42LB-CEGUY-JSOBW-KJJO5-KGFN4\"")
 
