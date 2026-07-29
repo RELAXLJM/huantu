@@ -38,7 +38,7 @@
         <!-- 腾讯地图 API Key -->
         <meta-data
             android:name="TencentMapSDK"
-            android:value="OOUBZ-BY4LT-GX3XE-VVCZI-CCUJF-7VFL3" />
+            android:value="JZBBZ-V42LB-CEGUY-JSOBW-KJJO5-KGFN4" />
 
         <!-- 登录/注册 -->
         <activity
